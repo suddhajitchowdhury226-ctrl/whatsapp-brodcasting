@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UploadCloud, FileSpreadsheet, Send, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
+import { UploadCloud, FileSpreadsheet, Send, ArrowLeft, Loader2, AlertCircle, Image as ImageIcon, X } from 'lucide-react';
 import api from '../utils/api';
 
 export default function NewCampaign() {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,6 +24,26 @@ export default function NewCampaign() {
         setFile(null);
       }
     }
+  };
+
+  const handleImageChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (selectedFile.type.startsWith('image/')) {
+        setImageFile(selectedFile);
+        setImagePreview(URL.createObjectURL(selectedFile));
+        setError('');
+      } else {
+        setError('Please select a valid image file (JPG, PNG, etc).');
+        setImageFile(null);
+        setImagePreview(null);
+      }
+    }
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
   };
 
   const handleSubmit = async (e) => {
@@ -44,6 +66,9 @@ export default function NewCampaign() {
     const formData = new FormData();
     formData.append('excelFile', file);
     formData.append('message', message);
+    if (imageFile) {
+      formData.append('imageFile', imageFile);
+    }
 
     try {
       // For now we'll pretend there's an endpoint /api/campaigns
@@ -56,6 +81,8 @@ export default function NewCampaign() {
 
       setSuccess('Campaign successfully queued for broadcasting!');
       setFile(null);
+      setImageFile(null);
+      setImagePreview(null);
       setMessage('');
       
       // Let success message show for a second before redirecting
@@ -135,10 +162,49 @@ export default function NewCampaign() {
               </div>
             </div>
 
+            {/* Optional Image Banner Upload */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
+                2. Add an Image Banner <span className="text-xs font-normal text-slate-500 bg-slate-800 px-2 py-1 rounded-full">Optional</span>
+              </label>
+              
+              {!imagePreview ? (
+                <div className="border-2 border-dashed border-slate-600 bg-slate-900/50 hover:border-slate-500 rounded-2xl p-6 text-center transition-colors">
+                  <input
+                    type="file"
+                    id="imageUpload"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                  <label htmlFor="imageUpload" className="cursor-pointer flex flex-col items-center">
+                    <div className="bg-slate-800 p-3 rounded-full mb-3">
+                      <ImageIcon className="w-6 h-6 text-slate-400" />
+                    </div>
+                    <span className="text-white font-medium mb-1">Upload banner image</span>
+                    <span className="text-slate-400 text-xs">JPG, PNG, WebP allowed</span>
+                  </label>
+                </div>
+              ) : (
+                <div className="relative rounded-2xl overflow-hidden border border-slate-600 group mt-2">
+                  <img src={imagePreview} alt="Banner Preview" className="w-full h-48 object-cover opacity-90 group-hover:opacity-70 transition-opacity" />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button 
+                      type="button" 
+                      onClick={clearImage}
+                      className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full flex items-center gap-2 shadow-lg"
+                    >
+                      <X className="w-5 h-5" /> <span className="font-semibold">Remove Image</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Message Compose Section */}
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-3">
-                2. Compose Message
+                3. Compose Message
               </label>
               <textarea
                 value={message}
