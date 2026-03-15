@@ -87,6 +87,7 @@ function FeatureCard({ icon, title, description }) {
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import NewCampaign from './pages/NewCampaign';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -98,6 +99,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/campaign/new" element={<NewCampaign />} />
         </Routes>
       </Router>
     </AuthProvider>

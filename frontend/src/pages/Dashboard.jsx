@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { LogOut, Plus, FileSpreadsheet, Activity } from 'lucide-react';
 import api from '../utils/api';
@@ -46,10 +46,10 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <h1 className="text-3xl font-bold">Campaign Dashboard</h1>
-          <button className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-6 py-3 rounded-xl font-semibold shadow-lg shadow-emerald-500/20 transition-all transform hover:-translate-y-0.5">
+          <Link to="/campaign/new" className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-6 py-3 rounded-xl font-semibold shadow-lg shadow-emerald-500/20 transition-all transform hover:-translate-y-0.5">
             <Plus className="w-5 h-5" />
             New Campaign
-          </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
