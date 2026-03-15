@@ -84,21 +84,23 @@ function FeatureCard({ icon, title, description }) {
   );
 }
 
-// Simple placeholders for routing
-function Dashboard() { return <div className="p-8 text-center text-xl">Dashboard - Coming Soon</div>; }
-function Login() { return <div className="p-8 text-center text-xl">Login - Coming Soon</div>; }
-function Register() { return <div className="p-8 text-center text-xl">Register - Coming Soon</div>; }
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
